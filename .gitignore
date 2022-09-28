@@ -25,13 +25,18 @@ ExportedObj/
 *.pdb
 *.opendb
 
-# Unity3D generated meta files
-*.pidb.meta
-*.pdb.meta
-
-# Unity3D Generated File On Crash Reports
-sysinfo.txt
-
-# Builds
-*.apk
-*.unitypackage
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+build/
+bld/
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+msbuild.log
+msbuild.err
+msbuild.wrn

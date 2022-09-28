@@ -1,0 +1,21 @@
+syntax = "proto3";
+package orders;
+
+option csharp_namespace = "api";
+
+service Order {
+    rpc Create (CreateOrderRequest) returns (CreateOrderResponse);
+}
+
+message CreateOrderRequest {
+    string customerId = 1;
+    string addressId = 2;
+}
+
+message CreateOrderResponse {
+    bool success = 1;
+    oneof result {
+        string orderId = 2;
+        string errors = 3;
+    }
+}
