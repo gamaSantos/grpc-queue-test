@@ -18,7 +18,7 @@ public class Order
         CreatedAt = createdAt;
     }
 
-    public static ICommandResult<Order> CreateWithCustomer(IEnumerable<Pizza> pizzas, Customer customer)
+    public static ICommandResult<Order> Create(IEnumerable<Pizza> pizzas, Customer customer)
     {
         var deliverable = (IDeliverable)customer;
         var validator = ValidateCreationParamenters(pizzas, deliverable);

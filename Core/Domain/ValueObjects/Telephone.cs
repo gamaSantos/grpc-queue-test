@@ -15,7 +15,7 @@ public record Telephone
         return $"{RegionCode}{PhoneNumber}";
     }
 
-    internal bool IsValid()
+    public bool IsValid()
     {
         return
             RegionCode.Length == 3

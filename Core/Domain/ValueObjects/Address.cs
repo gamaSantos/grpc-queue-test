@@ -18,5 +18,5 @@ public class Address
         return $"{StreetName}, {Number}{(string.IsNullOrWhiteSpace(Observation) ? string.Empty : " " + Observation)}";
     }
 
-    internal bool IsValid() => string.IsNullOrWhiteSpace(StreetName) == false && string.IsNullOrWhiteSpace(Number) == false;
+    public bool IsValid() => string.IsNullOrWhiteSpace(StreetName) == false && string.IsNullOrWhiteSpace(Number) == false;
 }
