@@ -10,6 +10,14 @@ service Order {
 message CreateOrderRequest {
     string customerId = 1;
     string addressId = 2;
+    string phoneNumber = 3;
+    string phoneRegion = 4;
+    repeated CreateOrderPizzaRequest pizzas = 5;
+}
+
+message CreateOrderPizzaRequest 
+{
+    repeated string flavors = 1;
 }
 
 message CreateOrderResponse {

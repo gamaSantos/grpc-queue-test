@@ -1,6 +1,6 @@
 namespace GrpcQueueTest.Core.Domain.Comands;
 
-public class SuccessCommandResult<T> : ICommandResult<T>
+public class SuccessCommandResult<T> : ICommandResult<T>, ICommandResult
 {
     private readonly T _content;
 
@@ -29,4 +29,6 @@ public class SuccessCommandResult<T> : ICommandResult<T>
     {
         matchContent(_content);
     }
+
+    public R Match<R>(Func<IEnumerable<string>, R> matchErrors, Func<R> matchContent) => matchContent();
 }

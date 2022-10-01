@@ -2,17 +2,17 @@ namespace GrpcQueueTest.Orders.Domain.Models;
 
 public class Customer : IDeliverable
 {
-    public Customer(IEntityId id, Telephone phone, Address adress)
+    public Customer(IEntityId id, Telephone phone, IAddress adress)
     {
         Id = id;
         Phone = phone;
-        Adress = adress;
+        Address = adress;
     }
 
     public IEntityId Id { get; }
     public Telephone Phone { get; }
-    public Address Adress { get; }
-    public string GetAdressLine() => Adress.ToString();
+    public IAddress Address { get; }
+    public string GetAdressLine() => Address.ToString();
 
     public IDeliverable AsDeliverable() => (IDeliverable)this;
 }

@@ -4,5 +4,5 @@ public interface IDeliverable
 {
     public string GetAdressLine();
     public Telephone Phone { get; }
-    public Address Adress { get; }
+    public IAddress Address { get; }
 }

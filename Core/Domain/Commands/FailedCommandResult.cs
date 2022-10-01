@@ -1,6 +1,6 @@
 namespace GrpcQueueTest.Core.Domain.Comands;
 
-public class FailedCommandResult<T> : ErrorContainer, ICommandResult<T>
+public class FailedCommandResult<T> : ErrorContainer, ICommandResult<T>, ICommandResult
 {
     internal FailedCommandResult(IEnumerable<string> errors) : base(errors)
     {
@@ -25,4 +25,6 @@ public class FailedCommandResult<T> : ErrorContainer, ICommandResult<T>
     {
         matchErrors(Errors);
     }
+
+    public R Match<R>(Func<IEnumerable<string>, R> matchErrors, Func<R> matchContent) => matchErrors(Errors);
 }
