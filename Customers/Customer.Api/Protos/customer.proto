@@ -1,0 +1,56 @@
+syntax = "proto3";
+package Proto;
+option csharp_namespace = "GrpcQueueTest.Customers.Api";
+
+service Customer {
+  rpc Create (CreateRequest) returns (CreateResponse);
+  rpc Get(GetRequest) returns (GetResponse);
+}
+
+// The request message containing the user's name.
+message CreateRequest {
+  string firstName = 2;
+  string lastName = 3;
+  string phoneRegion = 14;
+  string phoneNumber = 15;
+}
+
+// The response message containing the greetings.
+message CreateResponse {
+  string id = 1;
+}
+
+message GetRequest{
+  string id = 1;
+}
+
+message GetResponse{
+  string id = 1;
+  string firstName = 2;
+  string lastName = 3;
+  string phoneRegion = 14;
+  string phoneNumber = 15;
+  repeated string AddressIds = 21;
+}
+
+message CreateAddressRequest{
+  string customerId = 1;
+  string streetName = 2;
+  string number = 3;
+  optional string observation = 4;
+}
+
+message CreateAddressResponse{
+  string id = 1;
+}
+
+message GetAddressRequest{
+  string id = 1;
+}
+
+message GetAddressResponse{
+  string id = 1;
+  string streetName = 2;
+  string number = 3;
+  optional string observation = 4;
+}
