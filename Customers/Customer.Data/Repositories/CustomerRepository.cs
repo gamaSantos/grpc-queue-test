@@ -53,9 +53,32 @@ public class CustomerRepository : ICustomerRepository
         return customerEntity.ToDomain();
     }
 
-    public Task<ICommandResult<Customer>> Update(Customer customer)
+    public async Task<ICommandResult<Customer>> Update(Customer customer)
     {
-        throw new NotImplementedException();
+        var entity = CustomerEntity.FromDomain(customer);
+        var customerUpdateSql = @$"Update Customers Set FirstName = @{nameof(entity.FirstName)} where id = @{nameof(customer.Id)}";
+        var addressesMerge = @"
+                    MERGE INTO Addresses AS TARGET 
+                    USING (
+                    VALUES
+                        (@Id, @CustomerId, @StreetName, @Number, @Observation)
+                    ) AS SOURCE (Id, CustomerId, StreetName, [Number], Observation)
+                    ON SOURCE.Id = TARGET.Id
+                    WHEN MATCHED THEN
+                    UPDATE SET 
+                        StreetName = StreetName,
+                        [Number] = [Number], 
+                        Observation = Observation
+                    WHEN NOT MATCHED BY TARGET THEN
+                    INSERT (Id, CustomerId, StreetName, [Number], Observation)
+                    VALUES (Id, CustomerId, StreetName, [Number], Observation)
+                    WHEN NOT MATCHED BY Source then DELETE;";
+
+        var addresses = customer.Addresses.Select(address => AddressEntity.FromDomain(customer.Id, address)).ToList();
+        using var connection = GetOpenConnection();
+        await connection.ExecuteAsync(customerUpdateSql, entity);
+        await connection.ExecuteAsync(addressesMerge, addresses);
+        return CommandResult.CreateSuccess(customer);
     }
 
     private SqlConnection GetOpenConnection()
