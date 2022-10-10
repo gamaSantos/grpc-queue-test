@@ -20,7 +20,7 @@ public class Customer
     public Telephone Phone { get; }
     public IReadOnlyCollection<Address> Addresses => _address.Values.ToList().AsReadOnly();
 
-    public static ICommandResult<Customer> Create(Name fullname, Telephone phone)
+    public static ICommandResult<Customer> TryCreate(Name fullname, Telephone phone)
     {
         var validator = CreateComponentsValidator(fullname, phone);
         return validator.CreateCommand(new Customer(

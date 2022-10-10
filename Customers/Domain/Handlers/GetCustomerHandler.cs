@@ -3,7 +3,7 @@ using Customers.Domain.Repositories;
 
 namespace Customers.Domain.Handlers;
 
-public class GetCustomerHandler
+public class GetCustomerHandler : IGetCustomerHandler
 {
     private ICustomerRepository _repository;
 
