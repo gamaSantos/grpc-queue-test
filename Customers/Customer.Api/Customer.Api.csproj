@@ -14,4 +14,10 @@
     <PackageReference Include="Grpc.AspNetCore" Version="2.40.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Customer.Data\Customer.Data.csproj" />
+    <ProjectReference Include="..\Domain\Customers.Domain.csproj" />
+    <ProjectReference Include="..\..\Core\Domain\core.domain.csproj" />
+  </ItemGroup>
+
 </Project>
