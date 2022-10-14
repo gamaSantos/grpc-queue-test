@@ -45,9 +45,38 @@ public class CustomerService : CustomerBase
     }
 
 
-    public override Task<GetResponse> Get(GetRequest request, ServerCallContext context)
+    public override async Task<GetResponse> Get(GetRequest request, ServerCallContext context)
     {
-        return base.Get(request, context);
+        var errorResponse = new GetResponse()
+        {
+            Success = false
+        };
+        if (Guid.TryParse(request.Id, out var id) == false)
+        {
+            errorResponse.Errors.Add("invalid id");
+            return errorResponse;
+        };
+        var getResult = await _getHandler.GetAsync(new GetCustomer(new CustomerId(id)));
+        return getResult.Match(errors =>
+        {
+            errorResponse.Errors.AddRange(errors);
+            return errorResponse;
+        },
+        customer =>
+        {
+            var success = new GetResponse
+            {
+                Id = customer.Id.ToString(),
+                FirstName = customer.FullName.FirstName,
+                LastName = customer.FullName.FirstName,
+                PhoneRegion = customer.Phone.RegionCode,
+                PhoneNumber = customer.Phone.PhoneNumber,
+                Success = true
+
+            };
+            foreach (var address in customer.Addresses) success.AddressIds.Add(address.Id.ToString());
+            return success;
+        });
     }
 
 }

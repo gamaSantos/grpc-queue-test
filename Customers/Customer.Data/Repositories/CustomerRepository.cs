@@ -47,8 +47,8 @@ public class CustomerRepository : ICustomerRepository
         var sqlAddresses = @$"SELECT * FROM Addresses WHERE customerId = @{nameof(id)}";
 
         using var connection = GetOpenConnection();
-        var customerEntity = await connection.QueryFirstAsync<CustomerEntity>(sqlCustomer, new { id });
-        var Addresses = await connection.QueryAsync(sqlAddresses, new { id });
+        var customerEntity = await connection.QueryFirstAsync<CustomerEntity>(sqlCustomer, new { id = id.Value });
+        var Addresses = await connection.QueryAsync(sqlAddresses, new { id = id.Value });
 
         return customerEntity.ToDomain();
     }

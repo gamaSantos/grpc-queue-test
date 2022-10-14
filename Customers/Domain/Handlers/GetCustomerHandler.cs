@@ -12,7 +12,7 @@ public class GetCustomerHandler : IGetCustomerHandler
         _repository = repository;
     }
 
-    public Task<ICommandResult<Customer>> Get(GetCustomer query)
+    public Task<ICommandResult<Customer>> GetAsync(GetCustomer query)
     {
         return _repository.Get(query.Id);
     }
