@@ -1,6 +1,5 @@
 using GrpcQueueTest.Orders.Domain.Commands;
 using GrpcQueueTest.Orders.Domain.Models;
-using GrpcQueueTest.Orders.Domain.Models.Stock;
 using GrpcQueueTest.Orders.Domain.Repositories;
 using GrpcQueueTest.Orders.Domain.Services;
 
@@ -8,15 +7,12 @@ namespace GrpcQueueTest.Orders.Domain.Handlers;
 
 public class CreateOrderCommandHandler : ICreateOrderCommandHandler
 {
-    private readonly IStockService _stockService;
     private readonly IOrderRepository _orderRepository;
     private readonly ICustomerService _customerService;
 
-    public CreateOrderCommandHandler(IStockService stockService,
-                                     IOrderRepository orderRepository,
+    public CreateOrderCommandHandler(IOrderRepository orderRepository,
                                      ICustomerService customerService)
     {
-        _stockService = stockService;
         _orderRepository = orderRepository;
         _customerService = customerService;
     }
@@ -45,30 +41,13 @@ public class CreateOrderCommandHandler : ICreateOrderCommandHandler
     private async Task<ICommandResult<IEnumerable<Pizza>>> BuildPizzas(CreateOrderCommand command)
     {
         var resultCollection = new CommandResultCollection<Pizza>();
-        var withdraw = await GetWithdrawFromStock(command);
-        if (withdraw.IsCompleted == false) return CommandResult.CreateFailed<IEnumerable<Pizza>>("Some flavors are missing in stock");
         foreach (var createPizzaCommand in command.Pizzas)
         {
-            var flavors = createPizzaCommand.Flavors
-                    .Select(flavorSku => withdraw.Items.First(pc => pc.Sku == flavorSku))
-                    .Select(si => new Flavor(si.Sku, si.BasePrice));
+            //TODO add price in command
+            var flavors = createPizzaCommand.Flavors.Select(flavorSku => new Flavor(flavorSku, 0));
             resultCollection.Add(Pizza.Create(flavors));
         }
         return resultCollection.Flatten();
-    }
-
-    private async Task<Withdraw> GetWithdrawFromStock(CreateOrderCommand command)
-    {
-        var neededSku = command.Pizzas
-                            .SelectMany(p => p.Flavors)
-                            .GroupBy(i => i)
-                            .Select(g => new { sku = g.Key, quantity = g.Count() });
-        var withdrawItems = WithdrawItems.CreateEmpty();
-        foreach (var item in neededSku)
-        {
-            withdrawItems.TryAddItem(item.sku, (uint)item.quantity);
-        }
-        return await _stockService.WithdrawFromStock(withdrawItems);
     }
 
     private async Task<ICommandResult<Customer>> GetCustomer(Guid? customerId)
